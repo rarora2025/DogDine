@@ -1,47 +1,199 @@
-// Global variables
+// Simple, working Cart JavaScript
 let cart = [];
 let deliveryDistance = 0;
 let deliveryFee = 0;
 let customerAddress = '';
 let customerZipCode = '';
+let isDeliveryAvailable = false;
 
-// Initialize everything when DOM is loaded
+// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Load cart from localStorage
+    console.log('Initializing cart page...');
+    initializeCart();
+    initializeLocationChecker();
+    updateCartDisplay();
+    updateCartCount();
+    updateOrderSummary();
+    addCartStyles();
+});
+
+// Initialize Cart
+function initializeCart() {
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
         cart = JSON.parse(savedCart);
+        console.log('Loaded cart:', cart);
     }
+}
+
+// Initialize Location Checker
+function initializeLocationChecker() {
+    const locationForm = document.getElementById('locationForm');
+    const addressInput = document.getElementById('addressInput');
     
-    // Initialize all components
-    initializeNavigation();
-    updateCartDisplay();
-    updateCartCount();
-    initializeLocationForm();
-});
-
-// Navigation functionality
-function initializeNavigation() {
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
-            });
+    if (locationForm && addressInput) {
+        locationForm.addEventListener('submit', handleLocationSubmit);
+        
+        // Simple address suggestions
+        addressInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            if (query.length >= 3) {
+                showAddressSuggestions(query);
+            } else {
+                hideAddressSuggestions();
+            }
         });
     }
 }
 
-// Update cart display
+// Handle Location Submit
+function handleLocationSubmit(event) {
+    event.preventDefault();
+    
+    const addressInput = document.getElementById('addressInput');
+    const zipCodeInput = document.getElementById('zipCodeInput');
+    
+    if (!addressInput || !zipCodeInput) return;
+    
+    customerAddress = addressInput.value.trim();
+    customerZipCode = zipCodeInput.value.trim();
+    
+    if (!customerAddress || !customerZipCode) {
+        showNotification('Please enter a valid address', 'error');
+        return;
+    }
+    
+    // Show loading state
+    const checkDeliveryBtn = document.getElementById('checkDeliveryBtn');
+    if (checkDeliveryBtn) {
+        checkDeliveryBtn.textContent = 'Checking...';
+        checkDeliveryBtn.disabled = true;
+    }
+    
+    // Simulate API call
+    setTimeout(() => {
+        checkDeliveryAvailability(customerAddress, customerZipCode);
+        if (checkDeliveryBtn) {
+            checkDeliveryBtn.textContent = 'Check Delivery';
+            checkDeliveryBtn.disabled = false;
+        }
+    }, 1500);
+}
+
+// Check Delivery Availability
+function checkDeliveryAvailability(address, zipCode) {
+    // Simple distance calculation
+    deliveryDistance = Math.floor(Math.random() * 15) + 1;
+    deliveryFee = deliveryDistance <= 5 ? 0 : 5;
+    isDeliveryAvailable = deliveryDistance <= 15;
+    
+    displayLocationResult();
+    updateOrderSummary();
+}
+
+// Display Location Result
+function displayLocationResult() {
+    const resultContainer = document.getElementById('locationResult');
+    if (!resultContainer) return;
+    
+    let resultHTML = '';
+    
+    if (isDeliveryAvailable) {
+        const deliveryType = deliveryDistance <= 5 ? 'Standard' : 'Extended';
+        
+        resultHTML = `
+            <div class="location-result-success">
+                <h4>✅ Delivery Available!</h4>
+                <p><strong>Distance:</strong> ${deliveryDistance} miles</p>
+                <p><strong>Delivery Type:</strong> ${deliveryType}</p>
+                <p><strong>Delivery Fee:</strong> ${deliveryFee === 0 ? 'FREE' : '$' + deliveryFee}</p>
+            </div>
+        `;
+        
+        // Enable proceed button
+        const proceedBtn = document.getElementById('proceedBtn');
+        if (proceedBtn) {
+            proceedBtn.disabled = false;
+        }
+        
+        showNotification('Great! We deliver to your area', 'success');
+    } else {
+        resultHTML = `
+            <div class="location-result-error">
+                <h4>❌ Delivery Not Available</h4>
+                <p>We're sorry, but we don't currently deliver to your area.</p>
+                <p><strong>Current service area:</strong> Greenwich, CT and surrounding areas within 15 miles.</p>
+            </div>
+        `;
+        
+        showNotification('Delivery not available in your area', 'error');
+    }
+    
+    resultContainer.innerHTML = resultHTML;
+    resultContainer.style.display = 'block';
+}
+
+// Show Address Suggestions
+function showAddressSuggestions(query) {
+    const suggestionsContainer = document.getElementById('addressSuggestions');
+    if (!suggestionsContainer) return;
+    
+    const greenwichAddresses = [
+        '123 Greenwich Avenue, Greenwich, CT 06830',
+        '456 East Putnam Avenue, Greenwich, CT 06830',
+        '789 West Putnam Avenue, Greenwich, CT 06830',
+        '321 Sound Beach Avenue, Greenwich, CT 06830',
+        '654 North Street, Greenwich, CT 06830'
+    ];
+    
+    const suggestions = greenwichAddresses.filter(address => 
+        address.toLowerCase().includes(query.toLowerCase())
+    );
+    
+    if (suggestions.length === 0) {
+        suggestionsContainer.style.display = 'none';
+        return;
+    }
+    
+    let suggestionsHTML = '';
+    suggestions.forEach(suggestion => {
+        suggestionsHTML += `
+            <div class="address-suggestion" onclick="selectAddress('${suggestion}')">
+                📍 ${suggestion}
+            </div>
+        `;
+    });
+    
+    suggestionsContainer.innerHTML = suggestionsHTML;
+    suggestionsContainer.style.display = 'block';
+}
+
+function hideAddressSuggestions() {
+    const suggestionsContainer = document.getElementById('addressSuggestions');
+    if (suggestionsContainer) {
+        suggestionsContainer.style.display = 'none';
+    }
+}
+
+function selectAddress(address) {
+    const addressInput = document.getElementById('addressInput');
+    const zipCodeInput = document.getElementById('zipCodeInput');
+    
+    if (addressInput) addressInput.value = address;
+    if (zipCodeInput) zipCodeInput.value = '06830';
+    
+    hideAddressSuggestions();
+    
+    // Auto-submit the form
+    setTimeout(() => {
+        const locationForm = document.getElementById('locationForm');
+        if (locationForm) {
+            locationForm.dispatchEvent(new Event('submit'));
+        }
+    }, 100);
+}
+
+// Update Cart Display
 function updateCartDisplay() {
     const cartItemsContainer = document.getElementById('cartItemsContainer');
     const cartEmpty = document.getElementById('cartEmpty');
@@ -61,11 +213,11 @@ function updateCartDisplay() {
     cart.forEach((item, index) => {
         cartHTML += `
             <div class="cart-item">
-                <div class="cart-item-info">
+                <div class="cart-item-details">
                     <h4>${item.name}</h4>
                     <p>$${item.price.toFixed(2)} each</p>
                 </div>
-                <div class="cart-item-controls">
+                <div class="cart-item-quantity">
                     <button onclick="updateQuantity(${index}, -1)">-</button>
                     <span>${item.quantity}</span>
                     <button onclick="updateQuantity(${index}, 1)">+</button>
@@ -73,282 +225,249 @@ function updateCartDisplay() {
                 <div class="cart-item-total">
                     $${(item.price * item.quantity).toFixed(2)}
                 </div>
-                <button class="remove-item" onclick="removeFromCart(${index})">&times;</button>
+                <button onclick="removeFromCart(${index})">Remove</button>
             </div>
         `;
     });
     
     cartItemsContainer.innerHTML = cartHTML;
-    updateSummary();
 }
 
-// Update cart summary
-function updateSummary() {
-    const subtotal = getCartTotal();
-    const total = subtotal + deliveryFee;
-    
-    document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
-    document.getElementById('deliveryFee').textContent = `$${deliveryFee.toFixed(2)}`;
-    document.getElementById('total').textContent = `$${total.toFixed(2)}`;
-}
-
-// Cart functions
-function removeFromCart(index) {
-    cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-    updateCartDisplay();
-}
-
+// Cart Functions
 function updateQuantity(index, change) {
+    if (index < 0 || index >= cart.length) return;
+    
     cart[index].quantity += change;
     
     if (cart[index].quantity <= 0) {
         removeFromCart(index);
     } else {
         localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
         updateCartDisplay();
+        updateCartCount();
+        updateOrderSummary();
     }
+}
+
+function removeFromCart(index) {
+    if (index < 0 || index >= cart.length) return;
+    
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+    updateCartCount();
+    updateOrderSummary();
 }
 
 function updateCartCount() {
     const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
     const navCartCount = document.getElementById('navCartCount');
     
-    if (navCartCount) navCartCount.textContent = cartCount;
-}
-
-function getCartTotal() {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-}
-
-// Location form functionality
-function initializeLocationForm() {
-    const locationForm = document.getElementById('locationForm');
-    if (locationForm) {
-        locationForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            checkLocation();
-        });
+    if (navCartCount) {
+        navCartCount.textContent = cartCount;
     }
 }
 
-function checkLocation() {
-    const addressInput = document.getElementById('addressInput');
-    const zipCodeInput = document.getElementById('zipCodeInput');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const locationResult = document.getElementById('locationResult');
-    const proceedBtn = document.getElementById('proceedBtn');
+function updateOrderSummary() {
+    const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const total = subtotal + deliveryFee;
     
-    if (!addressInput || !zipCodeInput) return;
+    const subtotalElement = document.getElementById('subtotal');
+    const deliveryFeeElement = document.getElementById('deliveryFee');
+    const totalElement = document.getElementById('total');
     
-    const address = addressInput.value.trim();
-    const zipCode = zipCodeInput.value.trim();
-    
-    if (!address || !zipCode) {
-        showLocationResult('Please enter both address and ZIP code.', 'error');
-        return;
-    }
-    
-    // Show loading
-    if (loadingOverlay) loadingOverlay.style.display = 'flex';
-    
-    // Simulate API call delay
-    setTimeout(() => {
-        if (loadingOverlay) loadingOverlay.style.display = 'none';
-        
-        // Simulate distance calculation
-        const distance = calculateDistance(zipCode);
-        
-        if (distance > 15) {
-            showLocationResult('Sorry, we don\'t deliver to your area yet. We currently serve within 15 miles of Greenwich, CT.', 'error');
-            return;
-        }
-        
-        customerAddress = address;
-        customerZipCode = zipCode;
-        deliveryDistance = distance;
-        
-        if (distance <= 5) {
-            deliveryFee = 0;
-            showLocationResult('Great! You\'re in our free delivery zone (0-5 miles).', 'success');
-        } else {
-            deliveryFee = 5;
-            showLocationResult(`You're in our extended delivery zone (${distance.toFixed(1)} miles). $5 premium delivery fee applies.`, 'success');
-        }
-        
-        // Enable proceed button
-        if (proceedBtn) proceedBtn.disabled = false;
-        
-        // Update summary
-        updateSummary();
-    }, 1500);
+    if (subtotalElement) subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+    if (deliveryFeeElement) deliveryFeeElement.textContent = `$${deliveryFee.toFixed(2)}`;
+    if (totalElement) totalElement.textContent = `$${total.toFixed(2)}`;
 }
 
-function calculateDistance(zipCode) {
-    // Simulate distance calculation based on ZIP code
-    const zipNum = parseInt(zipCode);
-    
-    if (zipNum >= 6830 && zipNum <= 6840) return Math.random() * 5; // 0-5 miles
-    if (zipNum >= 6841 && zipNum <= 6850) return 5 + Math.random() * 5; // 5-10 miles
-    if (zipNum >= 6851 && zipNum <= 6860) return 10 + Math.random() * 5; // 10-15 miles
-    
-    return 20; // Beyond service area
-}
-
-function showLocationResult(message, type) {
-    const locationResult = document.getElementById('locationResult');
-    if (!locationResult) return;
-    
-    const icon = type === 'success' ? '✅' : '❌';
-    const className = type === 'success' ? 'success' : 'error';
-    
-    locationResult.innerHTML = `
-        <div class="location-result ${className}">
-            <span class="result-icon">${icon}</span>
-            <p>${message}</p>
-        </div>
-    `;
-    locationResult.style.display = 'block';
-}
-
-// Proceed to delivery
 function proceedToDelivery() {
-    if (!customerAddress || !customerZipCode) {
-        alert('Please check your delivery location first.');
+    if (!isDeliveryAvailable) {
+        showNotification('Please check delivery availability first', 'error');
         return;
     }
     
     if (cart.length === 0) {
-        alert('Your cart is empty. Please add some items first.');
+        showNotification('Please add items to your cart first', 'error');
         return;
     }
     
-    // Redirect to main page for delivery selection
-    window.location.href = 'index.html#pricing';
+    showNotification('Proceeding to delivery setup...', 'success');
 }
 
-// Add cart styles
+// Simple Notification
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        color: #333;
+        padding: 1rem 1.5rem;
+        border-radius: 5px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        border-left: 4px solid #4a7c59;
+        max-width: 300px;
+        font-weight: 600;
+    `;
+    
+    if (type === 'error') {
+        notification.style.borderLeftColor = '#f44336';
+    } else if (type === 'success') {
+        notification.style.borderLeftColor = '#4caf50';
+    }
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Add simple styles
 function addCartStyles() {
     const styles = `
         <style>
             .cart-item {
+                background: white;
+                border-radius: 10px;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 display: flex;
                 align-items: center;
-                padding: 15px;
-                border-bottom: 1px solid #eee;
-                gap: 15px;
+                gap: 1rem;
             }
             
-            .cart-item-info {
+            .cart-item-details {
                 flex: 1;
             }
             
-            .cart-item-info h4 {
-                margin: 0 0 5px 0;
-                font-size: 16px;
+            .cart-item-details h4 {
+                margin: 0 0 0.5rem 0;
+                color: #333;
             }
             
-            .cart-item-info p {
+            .cart-item-details p {
                 margin: 0;
                 color: #666;
-                font-size: 14px;
             }
             
-            .cart-item-controls {
+            .cart-item-quantity {
                 display: flex;
                 align-items: center;
-                gap: 10px;
+                gap: 0.5rem;
             }
             
-            .cart-item-controls button {
+            .cart-item-quantity button {
                 width: 30px;
                 height: 30px;
                 border: 1px solid #ddd;
                 background: white;
                 border-radius: 50%;
                 cursor: pointer;
-                font-size: 16px;
             }
             
-            .cart-item-controls button:hover {
+            .cart-item-quantity button:hover {
                 background: #f0f0f0;
             }
             
             .cart-item-total {
                 font-weight: bold;
-                min-width: 60px;
+                color: #4a7c59;
+                min-width: 80px;
                 text-align: right;
             }
             
-            .remove-item {
-                background: none;
+            .cart-item button:last-child {
+                background: #f44336;
+                color: white;
                 border: none;
-                color: #ff4444;
-                font-size: 18px;
+                padding: 0.5rem 1rem;
+                border-radius: 5px;
                 cursor: pointer;
-                padding: 5px;
             }
             
-            .location-result {
-                padding: 15px;
-                border-radius: 8px;
-                margin-top: 15px;
-                display: flex;
-                align-items: center;
-                gap: 10px;
+            .location-result-success,
+            .location-result-error {
+                padding: 1rem;
+                border-radius: 10px;
+                margin-top: 1rem;
             }
             
-            .location-result.success {
+            .location-result-success {
                 background: #e8f5e8;
-                color: #2d5a2d;
-                border: 1px solid #4a7c59;
+                border: 1px solid #4caf50;
             }
             
-            .location-result.error {
-                background: #ffeaea;
-                color: #d32f2f;
+            .location-result-error {
+                background: #ffebee;
                 border: 1px solid #f44336;
             }
             
-            .result-icon {
-                font-size: 20px;
+            .address-suggestion {
+                padding: 0.5rem;
+                cursor: pointer;
+                border-bottom: 1px solid #eee;
             }
             
-            .loading-overlay {
-                position: fixed;
-                top: 0;
+            .address-suggestion:hover {
+                background: #f0f0f0;
+            }
+            
+            #addressSuggestions {
+                position: absolute;
+                top: 100%;
                 left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 10000;
-            }
-            
-            .loading-spinner {
+                right: 0;
                 background: white;
-                padding: 30px;
-                border-radius: 10px;
-                text-align: center;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                z-index: 1000;
+                max-height: 200px;
+                overflow-y: auto;
+                display: none;
             }
             
-            .spinner {
-                width: 40px;
-                height: 40px;
-                border: 4px solid #f3f3f3;
-                border-top: 4px solid #4a7c59;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-                margin: 0 auto 15px;
+            .form-group {
+                position: relative;
+                margin-bottom: 1rem;
             }
             
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
+            .btn {
+                padding: 0.75rem 1.5rem;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: 600;
+                text-decoration: none;
+                display: inline-block;
+            }
+            
+            .btn-primary {
+                background: #4a7c59;
+                color: white;
+            }
+            
+            .btn-secondary {
+                background: #f0f0f0;
+                color: #333;
+            }
+            
+            .btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            
+            .btn-full {
+                width: 100%;
             }
         </style>
     `;
@@ -356,7 +475,8 @@ function addCartStyles() {
     document.head.insertAdjacentHTML('beforeend', styles);
 }
 
-// Add styles on page load
-document.addEventListener('DOMContentLoaded', function() {
-    addCartStyles();
-}); 
+// Make functions globally available
+window.updateQuantity = updateQuantity;
+window.removeFromCart = removeFromCart;
+window.selectAddress = selectAddress;
+window.proceedToDelivery = proceedToDelivery; 

@@ -5,13 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DogDine - Fresh Human-Grade Dog Food Delivery</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Removed all external API dependencies -->
+    <!-- Modern SVG Icons -->
+    <style>
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .icon-large {
+            width: 48px;
+            height: 48px;
+        }
+        .icon-xl {
+            width: 64px;
+            height: 64px;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
+                <svg class="icon icon-large" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
                 <h2>DogDine</h2>
             </div>
             <ul class="nav-menu">
@@ -23,7 +43,9 @@
             </ul>
             <div class="nav-cart">
                 <a href="cart.html" class="cart-icon">
-                    <span class="cart-icon-text">🛒</span>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
                     <span class="cart-count" id="navCartCount">0</span>
                 </a>
             </div>
@@ -62,12 +84,16 @@
             </div>
             <div class="hero-image">
                 <div class="hero-card floating-animation">
-                    <span class="hero-icon">🐕</span>
+                    <svg class="icon icon-xl" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
                     <h3>Fresh & Healthy</h3>
                     <p>Human-grade ingredients</p>
                 </div>
                 <div class="hero-card floating-animation-delayed">
-                    <span class="hero-icon">❤️</span>
+                    <svg class="icon icon-xl" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
                     <h3>Made with Love</h3>
                     <p>Every meal matters</p>
                 </div>
@@ -85,7 +111,9 @@
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <span class="feature-icon-text">🌿</span>
+                        <svg class="icon icon-large" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
                     </div>
                     <h3>Human-Grade Quality</h3>
                     <p>Only the finest ingredients that meet human food standards, ensuring your dog gets the best nutrition possible.</p>
@@ -95,7 +123,9 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <span class="feature-icon-text">⚙️</span>
+                        <svg class="icon icon-large" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
                     </div>
                     <h3>Personalized Portions</h3>
                     <p>Each meal is carefully portioned based on your dog's size, age, and dietary needs for optimal health.</p>
@@ -105,7 +135,9 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <span class="feature-icon-text">🚚</span>
+                        <svg class="icon icon-large" viewBox="0 0 24 24">
+                            <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h4c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                        </svg>
                     </div>
                     <h3>Monday-Friday Delivery</h3>
                     <p>Fresh food delivered to your doorstep Monday through Friday in Greenwich, CT, so you never run out of healthy meals.</p>
@@ -115,7 +147,9 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <span class="feature-icon-text">❤️</span>
+                        <svg class="icon icon-large" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
                     </div>
                     <h3>Made with Love</h3>
                     <p>Every batch is freshly prepared with care, ensuring maximum nutrition and taste for your beloved pet.</p>
@@ -134,7 +168,9 @@
             <div class="products-grid">
                 <div class="product-card">
                     <div class="product-image">
-                        <span class="product-icon">🦴</span>
+                        <svg class="icon icon-xl" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
                     </div>
                     <h3>Chicken & Rice Blend</h3>
                     <p>Lean chicken with brown rice and vegetables. Perfect for active dogs.</p>
@@ -149,7 +185,9 @@
                 </div>
                 <div class="product-card">
                     <div class="product-image">
-                        <span class="product-icon">🐟</span>
+                        <svg class="icon icon-xl" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
                     </div>
                     <h3>Salmon & Sweet Potato</h3>
                     <p>Omega-rich salmon with sweet potato. Great for skin and coat health.</p>
@@ -164,7 +202,9 @@
                 </div>
                 <div class="product-card">
                     <div class="product-image">
-                        <span class="product-icon">🥕</span>
+                        <svg class="icon icon-xl" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
                     </div>
                     <h3>Beef & Vegetable Mix</h3>
                     <p>Premium beef with fresh vegetables. Ideal for growing puppies.</p>
@@ -179,7 +219,9 @@
                 </div>
                 <div class="product-card">
                     <div class="product-image">
-                        <span class="product-icon">🌿</span>
+                        <svg class="icon icon-xl" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
                     </div>
                     <h3>Turkey & Quinoa Bowl</h3>
                     <p>Lean turkey with quinoa and green vegetables. Perfect for weight management.</p>
@@ -194,7 +236,9 @@
                 </div>
                 <div class="product-card">
                     <div class="product-image">
-                        <span class="product-icon">🌱</span>
+                        <svg class="icon icon-xl" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
                     </div>
                     <h3>Lamb & Ancient Grains</h3>
                     <p>Premium lamb with ancient grains and herbs. Great for sensitive stomachs.</p>
@@ -309,21 +353,27 @@
             <div class="contact-content">
                 <div class="contact-info">
                     <div class="contact-item">
-                        <span class="contact-icon">📍</span>
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
                         <div>
                             <h4>Service Area</h4>
                             <p>Greenwich, CT</p>
                         </div>
                     </div>
                     <div class="contact-item">
-                        <span class="contact-icon">📞</span>
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                        </svg>
                         <div>
                             <h4>Phone</h4>
                             <p>(203) 274-3477</p>
                         </div>
                     </div>
                     <div class="contact-item">
-                        <span class="contact-icon">✉️</span>
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
                         <div>
                             <h4>Email</h4>
                             <p>arora.nisha@gmail.com</p>
