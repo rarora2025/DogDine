@@ -1,0 +1,26 @@
+{
+  "name": "dogdine",
+  "version": "1.0.0",
+  "description": "Fresh human-grade dog food delivery service",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "dev": "python3 -m http.server 8000",
+    "build": "echo 'No build process needed for static site'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "dog-food",
+    "delivery",
+    "fresh-food",
+    "greenwich",
+    "connecticut"
+  ],
+  "author": "DogDine Team",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
+} 
